@@ -1,0 +1,41 @@
+package com.velumtegra.xuimobile.sitedeployer
+
+enum class SiteProductionDeploymentSshSessionAcquisitionExecutionStatus {
+    FIXTURE_SESSION_ACQUIRED_REGISTERED_AND_CLOSED,
+}
+
+data class SiteProductionDeploymentSshSessionAcquisitionExecutionProof(
+    val contractVersion: Int,
+    val status: SiteProductionDeploymentSshSessionAcquisitionExecutionStatus,
+    val fixtureEndpointRequired: Boolean,
+    val credentialLeaseMaterialConsumed: Boolean,
+    val productionSshAdapterUsed: Boolean,
+    val sshSessionAcquisitionExecuted: Boolean,
+    val exactSessionRegistryUsed: Boolean,
+    val sessionRegistered: Boolean,
+    val exactRegistryLookupMatched: Boolean,
+    val sessionClosed: Boolean,
+    val remoteCommandDispatched: Boolean,
+    val sftpChannelOpened: Boolean,
+    val coordinatorInvoked: Boolean,
+    val exposesDeployUiAction: Boolean,
+    val realVpsAccessAllowed: Boolean,
+    val requiresSeparateSftpChannelOpenBoundary: Boolean,
+    val requiresSeparateCoordinatorInvocationBoundary: Boolean,
+    val authorizationSha256: String,
+    val sshSessionAcquisitionConsumptionReceiptSha256: String,
+    val resolutionProofSha256: String,
+    val serverAccessBindingSha256: String,
+    val serverAccessId: String,
+    val remoteHostIdentity: String,
+    val remotePort: Int,
+    val secretReferenceType: String,
+    val secretReferenceSha256: String,
+    val sshConnectionFactoryImplementation: String,
+    val exactSessionRegistryImplementation: String,
+    val sessionId: String,
+    val operationOwnerId: String,
+    val verifiedHostKeySha256: String,
+    val executedAtEpochMillis: Long,
+    val executionProofSha256: String,
+)

@@ -1,0 +1,67 @@
+# Android / Gradle / IDE
+.gradle/
+.idea/
+.kotlin/
+**/build/
+.externalNativeBuild/
+.cxx/
+*.iml
+local.properties
+.DS_Store
+Thumbs.db
+
+# Credentials and signing — never commit
+.env
+.env.*
+!.env.example
+*.jks
+*.keystore
+*.p12
+*.pfx
+*.pem
+*.key
+keystore.properties
+**/.ssh/
+**/id_rsa
+**/id_ed25519
+**/id_ecdsa
+**/known_hosts
+**/credentials
+**/credentials.*
+
+# Artifacts and private operator state
+.velum-sync/
+.bridge-state/
+*.apk
+*.aab
+*.aar
+*.zip
+*.7z
+*.rar
+*.log
+*.tmp
+*.bak
+*.sqlite
+*.sqlite3
+*.db
+*.db-wal
+*.db-shm
+*.hprof
+
+# Python caches
+__pycache__/
+*.py[cod]
+
+# Kept only in the author's working folder, not published:
+# local FULL-snapshot sync tooling, historical real-device/real-VPS acceptance
+# runners bound to retired servers, and the per-phase development journal.
+/SYNC_FULL_SNAPSHOT.bat
+/tools/sync-full-snapshot.ps1
+/docs/FULL_SNAPSHOT_SYNC.md
+/RUN_*.ps1
+/docs/PHASE*
+/docs/LIVE_PREFLIGHT_*.md
+
+# User-local infrastructure overlays (not part of initial GitHub scope)
+/private-local/
+/operator-secrets/

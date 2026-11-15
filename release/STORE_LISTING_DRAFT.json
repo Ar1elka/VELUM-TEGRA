@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "productName": "VELUM//TEGRA Next",
+  "applicationId": "com.velumtegra.xuimobile",
+  "releaseChannel": "release-candidate",
+  "versionCode": 3,
+  "versionName": "2.0.0-rc01",
+  "shortDescription": "Управление 3x-ui, Reality Scanner и Site Deployer с Android.",
+  "fullDescriptionStatus": "draft-required-before-publication",
+  "privacyPolicyUrl": null,
+  "privacyPolicyUrlStatus": "required-before-publication",
+  "supportEmail": null,
+  "supportWebsite": null,
+  "supportContactStatus": "required-before-publication",
+  "dataSafetyStatus": "questionnaire-required-before-publication",
+  "contentRatingStatus": "questionnaire-required-before-publication",
+  "publishingPerformed": false
+}

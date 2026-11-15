@@ -1,0 +1,44 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+    <application
+        android:name=".VelumTegraApplication"
+        android:allowBackup="false"
+        android:fullBackupContent="@xml/backup_rules"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:label="VELUM//TEGRA Next"
+        android:icon="@mipmap/velum_tegra_launcher"
+        android:roundIcon="@mipmap/velum_tegra_launcher"
+        android:supportsRtl="true"
+        android:networkSecurityConfig="@xml/velum_panel_network_security"
+        android:theme="@style/Theme.VelumTegraNext">
+        <service
+            android:name=".runtime.ExactOperationShortService"
+            android:exported="false"
+            android:foregroundServiceType="shortService"
+            android:stopWithTask="false" />
+        <service
+            android:name=".inventory.PanelTunnelHoldService"
+            android:exported="false"
+            android:foregroundServiceType="shortService" />
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>

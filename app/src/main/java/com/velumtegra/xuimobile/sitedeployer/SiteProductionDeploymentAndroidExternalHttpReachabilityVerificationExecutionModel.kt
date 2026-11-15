@@ -1,0 +1,42 @@
+package com.velumtegra.xuimobile.sitedeployer
+
+enum class SiteProductionDeploymentExternalHttpReachabilityVerificationExecutionStatus {
+    EXTERNAL_HTTP_INDEX_VERIFIED_FROM_ANDROID_IPV4,
+}
+
+data class SiteProductionDeploymentExternalHttpReachabilityVerificationExecutionProof(
+    val contractVersion: Int,
+    val status: SiteProductionDeploymentExternalHttpReachabilityVerificationExecutionStatus,
+    val verificationPlanSha256: String,
+    val publicationPlanSha256: String,
+    val loopbackVerificationPlanSha256: String,
+    val loopbackExecutionProofSha256: String,
+    val remoteHostIdentity: String,
+    val targetIpv4Literal: String,
+    val port: Int,
+    val domain: String,
+    val requestPath: String,
+    val executionAttemptId: String,
+    val externalTcpConnectPerformed: Boolean,
+    val externalHttpGetPerformed: Boolean,
+    val httpStatusCode: Int,
+    val contentLength: Int,
+    val expectedBodyBytes: Int,
+    val expectedBodySha256: String,
+    val observedBodySha256: String,
+    val exactBodySha256Verified: Boolean,
+    val externalNetworkPathReachabilityProved: Boolean,
+    val dnsResolutionPerformed: Boolean,
+    val dnsResolutionClaimed: Boolean,
+    val dnsMutationPerformed: Boolean,
+    val firewallMutationPerformed: Boolean,
+    val httpsUsed: Boolean,
+    val httpsClaimed: Boolean,
+    val configMutationPerformed: Boolean,
+    val packageInstallPerformed: Boolean,
+    val automaticRetryPerformed: Boolean,
+    val coordinatorInvoked: Boolean,
+    val exposesDeployUiAction: Boolean,
+    val executedAtEpochMillis: Long,
+    val executionProofSha256: String,
+)

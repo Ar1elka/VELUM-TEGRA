@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "product": "VELUM//TEGRA Next",
+  "releaseChannel": "release-candidate",
+  "applicationId": "com.velumtegra.xuimobile",
+  "versionCode": 3,
+  "versionName": "2.0.0-rc01",
+  "minSdk": 24,
+  "targetSdk": 37,
+  "signingCertificateSha256": "4ee503b8b02f89e9b91ba84bbe1e574687c18ebd3159c84c46f5f02eb3da63ba",
+  "metadataFrozen": true,
+  "publicationBlocked": true,
+  "publicationBlockers": [
+    "independent-offline-signing-recovery"
+  ],
+  "publishingPerformed": false
+}

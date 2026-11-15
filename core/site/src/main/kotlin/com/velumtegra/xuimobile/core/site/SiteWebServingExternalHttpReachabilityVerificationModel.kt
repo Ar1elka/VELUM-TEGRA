@@ -1,0 +1,56 @@
+package com.velumtegra.xuimobile.core.site
+
+enum class SiteWebServingExternalHttpReachabilityAuthorizedStep {
+    REVALIDATE_SUCCESSFUL_LOOPBACK_HTTP_PROOF,
+    REQUIRE_LITERAL_IPV4_REMOTE_TARGET,
+    CONNECT_FROM_ANDROID_DEVICE_ONCE,
+    HTTP_GET_EXACT_INDEX_WITH_EXACT_HOST_ONCE,
+    VERIFY_HTTP_STATUS_200,
+    VERIFY_CONTENT_LENGTH,
+    VERIFY_EXACT_INDEX_BODY_SHA256,
+}
+
+enum class SiteWebServingExternalHttpReachabilityCounteraction {
+    READ_ONLY_RECONCILIATION_AFTER_EXTERNAL_CONNECT_OR_HTTP_FAILURE,
+    SEPARATE_DNS_AUTHORITY_REQUIRED_BEFORE_DOMAIN_RESOLUTION,
+    SEPARATE_FIREWALL_AUTHORITY_REQUIRED_BEFORE_FIREWALL_MUTATION,
+    SEPARATE_TLS_AUTHORITY_REQUIRED_BEFORE_HTTPS,
+}
+
+data class SiteWebServingExternalHttpReachabilityVerificationPlan(
+    val contractVersion: Int,
+    val preparationSha256: String,
+    val publicationPlanSha256: String,
+    val reloadPlanSha256: String,
+    val loopbackVerificationPlanSha256: String,
+    val remoteHostIdentity: String,
+    val targetIpv4Literal: String,
+    val domain: String,
+    val port: Int,
+    val requestPath: String,
+    val expectedDocumentPath: String,
+    val expectedBodySha256: String,
+    val expectedBodyBytes: Int,
+    val maxHeaderBytes: Int,
+    val connectTimeoutMillis: Int,
+    val readTimeoutMillis: Int,
+    val steps: List<SiteWebServingExternalHttpReachabilityAuthorizedStep>,
+    val counteractions: List<SiteWebServingExternalHttpReachabilityCounteraction>,
+    val requiresSuccessfulLoopbackHttpProof: Boolean,
+    val literalIpv4TargetRequired: Boolean,
+    val externalTcpConnectOnceAuthorized: Boolean,
+    val externalHttpGetOnceAuthorized: Boolean,
+    val exactHostHeaderRequired: Boolean,
+    val requiresHttpStatus200: Boolean,
+    val requiresContentLengthMatch: Boolean,
+    val requiresExactBodySha256: Boolean,
+    val externalNetworkPathReachabilityClaimAuthorized: Boolean,
+    val dnsResolutionAuthorized: Boolean,
+    val dnsMutationAuthorized: Boolean,
+    val firewallMutationAuthorized: Boolean,
+    val httpsAuthorized: Boolean,
+    val configMutationAuthorized: Boolean,
+    val packageInstallAuthorized: Boolean,
+    val automaticRetryAuthorized: Boolean,
+    val verificationPlanSha256: String,
+)

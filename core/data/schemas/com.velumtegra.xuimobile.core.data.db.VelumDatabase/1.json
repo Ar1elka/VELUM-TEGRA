@@ -1,0 +1,793 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "e5d3879303c9eb7059e0b4741a3d0868",
+    "entities": [
+      {
+        "tableName": "servers",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`server_id` TEXT NOT NULL, `display_name` TEXT NOT NULL, `created_at_epoch_second` INTEGER NOT NULL, `created_at_nano` INTEGER NOT NULL, `revision` INTEGER NOT NULL, PRIMARY KEY(`server_id`))",
+        "fields": [
+          {
+            "fieldPath": "serverId",
+            "columnName": "server_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "displayName",
+            "columnName": "display_name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAtEpochSecond",
+            "columnName": "created_at_epoch_second",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAtNano",
+            "columnName": "created_at_nano",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "revision",
+            "columnName": "revision",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "server_id"
+          ]
+        }
+      },
+      {
+        "tableName": "server_accesses",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`server_access_id` TEXT NOT NULL, `server_id` TEXT NOT NULL, `host` TEXT NOT NULL, `port` INTEGER NOT NULL, `username` TEXT NOT NULL, `auth_kind` TEXT NOT NULL, `secret_id` TEXT NOT NULL, `pinned_host_key` TEXT NOT NULL, PRIMARY KEY(`server_access_id`), FOREIGN KEY(`server_id`) REFERENCES `servers`(`server_id`) ON UPDATE RESTRICT ON DELETE RESTRICT )",
+        "fields": [
+          {
+            "fieldPath": "serverAccessId",
+            "columnName": "server_access_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "serverId",
+            "columnName": "server_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "host",
+            "columnName": "host",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "port",
+            "columnName": "port",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "username",
+            "columnName": "username",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "authKind",
+            "columnName": "auth_kind",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "secretId",
+            "columnName": "secret_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pinnedHostKey",
+            "columnName": "pinned_host_key",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "server_access_id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_server_accesses_server_id",
+            "unique": false,
+            "columnNames": [
+              "server_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_server_accesses_server_id` ON `${TABLE_NAME}` (`server_id`)"
+          },
+          {
+            "name": "index_server_accesses_server_access_id_server_id",
+            "unique": true,
+            "columnNames": [
+              "server_access_id",
+              "server_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_server_accesses_server_access_id_server_id` ON `${TABLE_NAME}` (`server_access_id`, `server_id`)"
+          },
+          {
+            "name": "index_server_accesses_secret_id",
+            "unique": false,
+            "columnNames": [
+              "secret_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_server_accesses_secret_id` ON `${TABLE_NAME}` (`secret_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "servers",
+            "onDelete": "RESTRICT",
+            "onUpdate": "RESTRICT",
+            "columns": [
+              "server_id"
+            ],
+            "referencedColumns": [
+              "server_id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "xui_installations",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`installation_id` TEXT NOT NULL, `server_id` TEXT NOT NULL, `ownership` TEXT NOT NULL, `identity_service_unit` TEXT NOT NULL, `identity_binary_path` TEXT NOT NULL, `identity_root_path` TEXT NOT NULL, `identity_database_path` TEXT NOT NULL, `managed_install_id` TEXT, `baseline_service_unit` TEXT NOT NULL, `baseline_binary_path` TEXT NOT NULL, `baseline_root_path` TEXT NOT NULL, `baseline_database_path` TEXT NOT NULL, `panel_port` INTEGER NOT NULL, `web_base_path` TEXT NOT NULL, `listen_address` TEXT, `captured_at_epoch_second` INTEGER NOT NULL, `captured_at_nano` INTEGER NOT NULL, `revision` INTEGER NOT NULL, PRIMARY KEY(`installation_id`), FOREIGN KEY(`server_id`) REFERENCES `servers`(`server_id`) ON UPDATE RESTRICT ON DELETE RESTRICT )",
+        "fields": [
+          {
+            "fieldPath": "installationId",
+            "columnName": "installation_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "serverId",
+            "columnName": "server_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ownership",
+            "columnName": "ownership",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "identityServiceUnit",
+            "columnName": "identity_service_unit",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "identityBinaryPath",
+            "columnName": "identity_binary_path",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "identityRootPath",
+            "columnName": "identity_root_path",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "identityDatabasePath",
+            "columnName": "identity_database_path",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "managedInstallId",
+            "columnName": "managed_install_id",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "baselineServiceUnit",
+            "columnName": "baseline_service_unit",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "baselineBinaryPath",
+            "columnName": "baseline_binary_path",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "baselineRootPath",
+            "columnName": "baseline_root_path",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "baselineDatabasePath",
+            "columnName": "baseline_database_path",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "panelPort",
+            "columnName": "panel_port",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "webBasePath",
+            "columnName": "web_base_path",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "listenAddress",
+            "columnName": "listen_address",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "capturedAtEpochSecond",
+            "columnName": "captured_at_epoch_second",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "capturedAtNano",
+            "columnName": "captured_at_nano",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "revision",
+            "columnName": "revision",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "installation_id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_xui_installations_server_id",
+            "unique": false,
+            "columnNames": [
+              "server_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_xui_installations_server_id` ON `${TABLE_NAME}` (`server_id`)"
+          },
+          {
+            "name": "index_xui_installations_installation_id_server_id",
+            "unique": true,
+            "columnNames": [
+              "installation_id",
+              "server_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_xui_installations_installation_id_server_id` ON `${TABLE_NAME}` (`installation_id`, `server_id`)"
+          },
+          {
+            "name": "index_xui_installations_managed_install_id",
+            "unique": true,
+            "columnNames": [
+              "managed_install_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_xui_installations_managed_install_id` ON `${TABLE_NAME}` (`managed_install_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "servers",
+            "onDelete": "RESTRICT",
+            "onUpdate": "RESTRICT",
+            "columns": [
+              "server_id"
+            ],
+            "referencedColumns": [
+              "server_id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "management_accesses",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`installation_id` TEXT NOT NULL, `server_access_id` TEXT NOT NULL, `server_id` TEXT NOT NULL, PRIMARY KEY(`installation_id`, `server_access_id`), FOREIGN KEY(`installation_id`, `server_id`) REFERENCES `xui_installations`(`installation_id`, `server_id`) ON UPDATE RESTRICT ON DELETE RESTRICT , FOREIGN KEY(`server_access_id`, `server_id`) REFERENCES `server_accesses`(`server_access_id`, `server_id`) ON UPDATE RESTRICT ON DELETE RESTRICT )",
+        "fields": [
+          {
+            "fieldPath": "installationId",
+            "columnName": "installation_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "serverAccessId",
+            "columnName": "server_access_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "serverId",
+            "columnName": "server_id",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "installation_id",
+            "server_access_id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_management_accesses_installation_id_server_id",
+            "unique": false,
+            "columnNames": [
+              "installation_id",
+              "server_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_management_accesses_installation_id_server_id` ON `${TABLE_NAME}` (`installation_id`, `server_id`)"
+          },
+          {
+            "name": "index_management_accesses_server_access_id_server_id",
+            "unique": false,
+            "columnNames": [
+              "server_access_id",
+              "server_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_management_accesses_server_access_id_server_id` ON `${TABLE_NAME}` (`server_access_id`, `server_id`)"
+          },
+          {
+            "name": "index_management_accesses_server_id",
+            "unique": false,
+            "columnNames": [
+              "server_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_management_accesses_server_id` ON `${TABLE_NAME}` (`server_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "xui_installations",
+            "onDelete": "RESTRICT",
+            "onUpdate": "RESTRICT",
+            "columns": [
+              "installation_id",
+              "server_id"
+            ],
+            "referencedColumns": [
+              "installation_id",
+              "server_id"
+            ]
+          },
+          {
+            "table": "server_accesses",
+            "onDelete": "RESTRICT",
+            "onUpdate": "RESTRICT",
+            "columns": [
+              "server_access_id",
+              "server_id"
+            ],
+            "referencedColumns": [
+              "server_access_id",
+              "server_id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "web_panel_accesses",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`web_panel_access_id` TEXT NOT NULL, `installation_link_kind` TEXT NOT NULL, `installation_id` TEXT, `bound_server_id` TEXT, `username` TEXT NOT NULL, `password_secret_id` TEXT NOT NULL, `route_kind` TEXT NOT NULL, `route_origin_host` TEXT, `route_server_access_id` TEXT, `revision` INTEGER NOT NULL, PRIMARY KEY(`web_panel_access_id`), FOREIGN KEY(`installation_id`, `bound_server_id`) REFERENCES `xui_installations`(`installation_id`, `server_id`) ON UPDATE RESTRICT ON DELETE RESTRICT , FOREIGN KEY(`route_server_access_id`, `bound_server_id`) REFERENCES `server_accesses`(`server_access_id`, `server_id`) ON UPDATE RESTRICT ON DELETE RESTRICT )",
+        "fields": [
+          {
+            "fieldPath": "webPanelAccessId",
+            "columnName": "web_panel_access_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "installationLinkKind",
+            "columnName": "installation_link_kind",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "installationId",
+            "columnName": "installation_id",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "boundServerId",
+            "columnName": "bound_server_id",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "username",
+            "columnName": "username",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "passwordSecretId",
+            "columnName": "password_secret_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "routeKind",
+            "columnName": "route_kind",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "routeOriginHost",
+            "columnName": "route_origin_host",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "routeServerAccessId",
+            "columnName": "route_server_access_id",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "revision",
+            "columnName": "revision",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "web_panel_access_id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_web_panel_accesses_installation_id_bound_server_id",
+            "unique": false,
+            "columnNames": [
+              "installation_id",
+              "bound_server_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_web_panel_accesses_installation_id_bound_server_id` ON `${TABLE_NAME}` (`installation_id`, `bound_server_id`)"
+          },
+          {
+            "name": "index_web_panel_accesses_route_server_access_id_bound_server_id",
+            "unique": false,
+            "columnNames": [
+              "route_server_access_id",
+              "bound_server_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_web_panel_accesses_route_server_access_id_bound_server_id` ON `${TABLE_NAME}` (`route_server_access_id`, `bound_server_id`)"
+          },
+          {
+            "name": "index_web_panel_accesses_password_secret_id",
+            "unique": false,
+            "columnNames": [
+              "password_secret_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_web_panel_accesses_password_secret_id` ON `${TABLE_NAME}` (`password_secret_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "xui_installations",
+            "onDelete": "RESTRICT",
+            "onUpdate": "RESTRICT",
+            "columns": [
+              "installation_id",
+              "bound_server_id"
+            ],
+            "referencedColumns": [
+              "installation_id",
+              "server_id"
+            ]
+          },
+          {
+            "table": "server_accesses",
+            "onDelete": "RESTRICT",
+            "onUpdate": "RESTRICT",
+            "columns": [
+              "route_server_access_id",
+              "bound_server_id"
+            ],
+            "referencedColumns": [
+              "server_access_id",
+              "server_id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "operation_snapshots",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`operation_id` TEXT NOT NULL, `operation_type` TEXT NOT NULL, `target_kind` TEXT NOT NULL, `server_id` TEXT NOT NULL, `server_access_id` TEXT NOT NULL, `installation_id` TEXT, `status` TEXT NOT NULL, `checkpoint_phase_name` TEXT NOT NULL, `checkpoint_semantics` TEXT NOT NULL, `checkpoint_epoch_second` INTEGER NOT NULL, `checkpoint_nano` INTEGER NOT NULL, `started_at_epoch_second` INTEGER NOT NULL, `started_at_nano` INTEGER NOT NULL, `updated_at_epoch_second` INTEGER NOT NULL, `updated_at_nano` INTEGER NOT NULL, `revision` INTEGER NOT NULL, PRIMARY KEY(`operation_id`), FOREIGN KEY(`server_access_id`, `server_id`) REFERENCES `server_accesses`(`server_access_id`, `server_id`) ON UPDATE RESTRICT ON DELETE RESTRICT , FOREIGN KEY(`installation_id`, `server_id`) REFERENCES `xui_installations`(`installation_id`, `server_id`) ON UPDATE RESTRICT ON DELETE RESTRICT )",
+        "fields": [
+          {
+            "fieldPath": "operationId",
+            "columnName": "operation_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "operationType",
+            "columnName": "operation_type",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "targetKind",
+            "columnName": "target_kind",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "serverId",
+            "columnName": "server_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "serverAccessId",
+            "columnName": "server_access_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "installationId",
+            "columnName": "installation_id",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "status",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "checkpointPhaseName",
+            "columnName": "checkpoint_phase_name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "checkpointSemantics",
+            "columnName": "checkpoint_semantics",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "checkpointEpochSecond",
+            "columnName": "checkpoint_epoch_second",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "checkpointNano",
+            "columnName": "checkpoint_nano",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "startedAtEpochSecond",
+            "columnName": "started_at_epoch_second",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "startedAtNano",
+            "columnName": "started_at_nano",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updatedAtEpochSecond",
+            "columnName": "updated_at_epoch_second",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updatedAtNano",
+            "columnName": "updated_at_nano",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "revision",
+            "columnName": "revision",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "operation_id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_operation_snapshots_server_access_id_server_id",
+            "unique": false,
+            "columnNames": [
+              "server_access_id",
+              "server_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_operation_snapshots_server_access_id_server_id` ON `${TABLE_NAME}` (`server_access_id`, `server_id`)"
+          },
+          {
+            "name": "index_operation_snapshots_installation_id_server_id",
+            "unique": false,
+            "columnNames": [
+              "installation_id",
+              "server_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_operation_snapshots_installation_id_server_id` ON `${TABLE_NAME}` (`installation_id`, `server_id`)"
+          },
+          {
+            "name": "index_operation_snapshots_status",
+            "unique": false,
+            "columnNames": [
+              "status"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_operation_snapshots_status` ON `${TABLE_NAME}` (`status`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "server_accesses",
+            "onDelete": "RESTRICT",
+            "onUpdate": "RESTRICT",
+            "columns": [
+              "server_access_id",
+              "server_id"
+            ],
+            "referencedColumns": [
+              "server_access_id",
+              "server_id"
+            ]
+          },
+          {
+            "table": "xui_installations",
+            "onDelete": "RESTRICT",
+            "onUpdate": "RESTRICT",
+            "columns": [
+              "installation_id",
+              "server_id"
+            ],
+            "referencedColumns": [
+              "installation_id",
+              "server_id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "operation_journal",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`operation_id` TEXT NOT NULL, `revision` INTEGER NOT NULL, `status` TEXT NOT NULL, `checkpoint_phase_name` TEXT NOT NULL, `checkpoint_semantics` TEXT NOT NULL, `checkpoint_epoch_second` INTEGER NOT NULL, `checkpoint_nano` INTEGER NOT NULL, `recorded_at_epoch_second` INTEGER NOT NULL, `recorded_at_nano` INTEGER NOT NULL, PRIMARY KEY(`operation_id`, `revision`), FOREIGN KEY(`operation_id`) REFERENCES `operation_snapshots`(`operation_id`) ON UPDATE RESTRICT ON DELETE RESTRICT )",
+        "fields": [
+          {
+            "fieldPath": "operationId",
+            "columnName": "operation_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "revision",
+            "columnName": "revision",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "status",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "checkpointPhaseName",
+            "columnName": "checkpoint_phase_name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "checkpointSemantics",
+            "columnName": "checkpoint_semantics",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "checkpointEpochSecond",
+            "columnName": "checkpoint_epoch_second",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "checkpointNano",
+            "columnName": "checkpoint_nano",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "recordedAtEpochSecond",
+            "columnName": "recorded_at_epoch_second",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "recordedAtNano",
+            "columnName": "recorded_at_nano",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "operation_id",
+            "revision"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_operation_journal_operation_id",
+            "unique": false,
+            "columnNames": [
+              "operation_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_operation_journal_operation_id` ON `${TABLE_NAME}` (`operation_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "operation_snapshots",
+            "onDelete": "RESTRICT",
+            "onUpdate": "RESTRICT",
+            "columns": [
+              "operation_id"
+            ],
+            "referencedColumns": [
+              "operation_id"
+            ]
+          }
+        ]
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e5d3879303c9eb7059e0b4741a3d0868')"
+    ]
+  }
+}

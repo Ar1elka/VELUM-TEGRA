@@ -1,0 +1,35 @@
+package com.velumtegra.xuimobile.sitedeployer
+
+import com.velumtegra.xuimobile.core.site.SiteProductionDeploymentRuntimeIdentity
+
+data class SiteProductionDeploymentAndroidCompositionDescriptor(
+    val contractVersion: Int,
+    val compositionOnly: Boolean,
+    val productionTransportEnabled: Boolean,
+    val authorizesTransport: Boolean,
+    val opensSshSession: Boolean,
+    val invokesCoordinator: Boolean,
+    val exposesDeployUiAction: Boolean,
+    val realVpsAccessAllowed: Boolean,
+    val requiresFreshReadinessEvidence: Boolean,
+    val requiresExecutionAuthorization: Boolean,
+    val requiresRuntimeMutationPermit: Boolean,
+    val requiresDurableReplayConsumption: Boolean,
+    val runtimeIdentity: SiteProductionDeploymentRuntimeIdentity,
+    val serverId: String,
+    val serverAccessId: String,
+    val sshHost: String,
+    val sshPort: Int,
+    val sshUsername: String,
+    val sshAuthMethodKind: String,
+    val pinnedHostKeySha256: String,
+    val serverIdentitySha256: String,
+    val replayFenceContractVersion: Int,
+    val replayFenceCanonicalRootPath: String,
+    val transportCapabilityNames: List<String>,
+    val transportMaxFiles: Int,
+    val transportMaxTotalBytes: Long,
+    val transportMaxSingleFileBytes: Int,
+    val transportMaxRemotePathLength: Int,
+    val descriptorSha256: String,
+)

@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "product": "VELUM//TEGRA Next",
+  "releaseChannel": "release-candidate",
+  "applicationId": "com.velumtegra.xuimobile",
+  "versionCode": 3,
+  "versionName": "2.0.0-rc01",
+  "readinessState": "blocked",
+  "assessmentScope": "internal-publication-readiness-baseline-only",
+  "publishingPerformed": false,
+  "distributionBlocked": true,
+  "blockers": [
+    "independent-offline-signing-recovery",
+    "privacy-policy-public-url-not-set",
+    "store-listing-support-contact-not-set",
+    "data-safety-declaration-not-completed",
+    "content-rating-questionnaire-not-completed",
+    "foreground-service-special-use-declaration-not-reviewed"
+  ],
+  "requiredArtifacts": [
+    "release/STORE_LISTING_DRAFT.json",
+    "release/PERMISSIONS_DISCLOSURE.json",
+    "release/PRIVACY_POLICY_DRAFT.md",
+    "release/RELEASE_NOTES_RC01.md"
+  ],
+  "externalStorePolicyCertification": false
+}

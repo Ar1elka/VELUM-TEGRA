@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "applicationId": "com.velumtegra.xuimobile",
+  "versionName": "2.0.0-rc01",
+  "expectedMergedReleasePermissions": [
+    {
+      "name": "android.permission.INTERNET",
+      "purpose": "Connect to user-configured servers and panels, run network verification, Reality Scanner checks, and Site Deployer operations."
+    },
+    {
+      "name": "android.permission.ACCESS_NETWORK_STATE",
+      "purpose": "Observe connectivity state so explicit operations can react to network loss and recovery without hidden retry."
+    },
+    {
+      "name": "android.permission.FOREGROUND_SERVICE",
+      "purpose": "Run user-visible bounded foreground work for long-running or lifecycle-sensitive operations."
+    },
+    {
+      "name": "android.permission.FOREGROUND_SERVICE_SPECIAL_USE",
+      "purpose": "Keep an explicitly started Reality Scanner session alive while the app is backgrounded, navigated away from, or temporarily loses network."
+    },
+    {
+      "name": "android.permission.POST_NOTIFICATIONS",
+      "purpose": "Show the foreground-service notification required for user-visible Reality Scanner execution on supported Android versions."
+    },
+    {
+      "name": "com.velumtegra.xuimobile.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION",
+      "purpose": "AndroidX/compatibility-generated signature permission used to protect runtime receivers that are explicitly not exported to other apps."
+    }
+  ],
+  "expectedExportedComponents": [
+    {
+      "name": ".MainActivity",
+      "type": "activity",
+      "exported": true,
+      "reason": "Launcher entry point."
+    },
+    {
+      "name": "androidx.profileinstaller.ProfileInstallReceiver",
+      "type": "receiver",
+      "exported": true,
+      "permission": "android.permission.DUMP",
+      "reason": "AndroidX ProfileInstaller tooling receiver; exported by the dependency but gated by android.permission.DUMP."
+    }
+  ],
+  "expectedNonExportedComponents": [
+    {
+      "name": ".runtime.ExactOperationShortService",
+      "type": "service"
+    },
+    {
+      "name": "com.velumtegra.xuimobile.core.scanner.android.RealityScannerForegroundService",
+      "type": "service"
+    },
+    {
+      "name": "androidx.core.content.FileProvider",
+      "type": "provider"
+    }
+  ],
+  "foregroundServiceSpecialUseReviewStatus": "required-before-publication",
+  "externalPolicyCertification": false
+}

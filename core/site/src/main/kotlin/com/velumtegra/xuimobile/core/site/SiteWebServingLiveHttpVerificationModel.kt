@@ -1,0 +1,71 @@
+package com.velumtegra.xuimobile.core.site
+
+enum class SiteWebServingLiveHttpVerificationAuthorizedStep {
+    REVALIDATE_SUCCESSFUL_NGINX_RELOAD_PROOF,
+    REVALIDATE_EXACT_CONFIG_SHA256,
+    REVALIDATE_NGINX_MASTER_RUNNING,
+    REVALIDATE_EXPECTED_LISTENER_LIVE,
+    HTTP_GET_EXACT_INDEX_OVER_LOOPBACK_ONCE,
+    VERIFY_HTTP_STATUS_200,
+    VERIFY_CONTENT_LENGTH,
+    VERIFY_EXACT_INDEX_BODY_SHA256,
+}
+
+enum class SiteWebServingLiveHttpVerificationCounteraction {
+    READ_ONLY_RECONCILIATION_AFTER_VERIFICATION_FAILURE,
+    SEPARATE_NETWORK_POLICY_AUTHORITY_REQUIRED_FOR_EXTERNAL_REACHABILITY,
+}
+
+data class SiteWebServingLiveHttpVerificationPlan(
+    val contractVersion: Int,
+    val preparationSha256: String,
+    val publicationPlanSha256: String,
+    val reloadPlanSha256: String,
+    val remoteHostIdentity: String,
+    val configPath: String,
+    val desiredConfigSha256: String,
+    val domain: String,
+    val port: Int,
+    val requestPath: String,
+    val expectedDocumentPath: String,
+    val expectedBodySha256: String,
+    val expectedBodyBytes: Int,
+    val maxHeaderBytes: Int,
+    val steps: List<SiteWebServingLiveHttpVerificationAuthorizedStep>,
+    val counteractions: List<SiteWebServingLiveHttpVerificationCounteraction>,
+    val requiresSuccessfulReloadProof: Boolean,
+    val requiresExactConfigShaBeforeProbe: Boolean,
+    val requiresNginxMasterRunningBeforeProbe: Boolean,
+    val requiresExpectedListenerLiveBeforeProbe: Boolean,
+    val loopbackHttpGetOnceAuthorized: Boolean,
+    val requiresHttpStatus200: Boolean,
+    val requiresContentLengthMatch: Boolean,
+    val requiresExactBodySha256: Boolean,
+    val externalReachabilityClaimAuthorized: Boolean,
+    val configMutationAuthorized: Boolean,
+    val dnsMutationAuthorized: Boolean,
+    val firewallMutationAuthorized: Boolean,
+    val packageInstallAuthorized: Boolean,
+    val automaticRetryAuthorized: Boolean,
+    val verificationPlanSha256: String,
+)
+
+data class SiteWebServingLiveHttpVerificationObservation(
+    val remoteHostIdentity: String,
+    val verifiedHostKeySha256: String,
+    val exactConfigSha256Verified: Boolean,
+    val nginxMasterRunning: Boolean,
+    val expectedListenerLive: Boolean,
+    val loopbackHttpGetPerformed: Boolean,
+    val httpStatusCode: Int,
+    val contentLength: Int,
+    val observedBodySha256: String,
+    val exactBodySha256Verified: Boolean,
+    val remoteCommandCount: Int,
+    val arbitraryCommandAccepted: Boolean,
+    val configMutationPerformed: Boolean,
+    val dnsMutationPerformed: Boolean,
+    val firewallMutationPerformed: Boolean,
+    val packageInstallPerformed: Boolean,
+    val automaticRetryPerformed: Boolean,
+)

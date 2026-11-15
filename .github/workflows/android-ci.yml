@@ -1,0 +1,66 @@
+name: Android CI (offline)
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: android-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  debug-build-and-unit-tests:
+    name: Debug APK and JVM unit tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    env:
+      CI: "true"
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Install JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Install Android SDK tools and accept licenses
+        uses: android-actions/setup-android@v4
+
+      - name: Install compile SDK
+        run: sdkmanager --install 'platforms;android-37.0' 'build-tools;37.0.0'
+
+      - name: Configure Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Compile debug APK and run offline JVM tests
+        run: >-
+          bash ./gradlew --no-daemon
+          :app:assembleDebug :app:assembleDebugAndroidTest :app:testDebugUnitTest
+          :core:data:testDebugUnitTest
+          :core:domain:test
+          :core:model:test
+          :core:runtime-android:testDebugUnitTest
+          :core:runtime:test
+          :core:scanner-android:testDebugUnitTest
+          :core:scanner:test
+          :core:secrets:testDebugUnitTest
+          :core:site:test
+          :core:ssh:test
+          :core:webpanel:test
+
+      - name: Exercise embedded recovery workers and SQLite reference queries locally
+        run: python3 tools/test-handoff-regressions.py
+
+      # Assemble Android instrumented tests without executing them on hosted runners.
+      # No emulator, no VPS, no SSH, no release signing or deployment.
+      # A successful compile is NOT real-device or backup/restore acceptance.
