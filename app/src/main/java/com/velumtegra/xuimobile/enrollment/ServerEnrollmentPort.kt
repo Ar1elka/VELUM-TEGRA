@@ -119,7 +119,12 @@ object EnrollmentInputPolicy {
                         }
                     }
         }
-        return if (pair == null) "Ожидается текстовый приватный PEM/OpenSSH-ключ с корректным BEGIN/END; публичные ключи не подходят." else null
+        if (pair == null) {
+            return "Ожидается текстовый приватный PEM/OpenSSH-ключ с корректным BEGIN/END; публичные ключи не подходят."
+        }
+        // Known-unsupported types (Ed25519, DSA, hardware tokens) get an explicit message now rather than
+        // an opaque "server rejected SSH authentication" after connecting.
+        return UnsupportedPrivateKeyDetector.explain(bytes)
     }
 
     private fun ByteArray.indexOfSubArray(pattern: ByteArray): Int {

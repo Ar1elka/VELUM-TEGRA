@@ -8,6 +8,11 @@ enum class SiteNginxInstallOutcome(val message: String) {
     ALREADY_RUNNING("nginx уже установлен и работает. Нажмите «Проверить сервер» ещё раз."),
     NO_APT("На сервере нет apt-get: автоматическая установка поддерживается только на Ubuntu/Debian."),
     INSTALL_FAILED("apt-get не смог установить nginx (нет сети к репозиториям или занят менеджер пакетов). Повторите позже."),
+    UNSUPPORTED_OS(
+        "Эта версия системы снята с поддержки (Debian 11 и старше или Ubuntu 18.04 и старше): её пакеты " +
+            "перенесены в архив, поэтому nginx не устанавливается. Переустановите сервер на Debian 12/13 " +
+            "или Ubuntu 22.04/24.04. Приложение ничего не меняло в списках пакетов.",
+    ),
     START_FAILED("nginx установлен, но не запустился. Скорее всего порт 80 уже занят другой программой."),
     UNKNOWN("Не удалось подтвердить результат установки nginx. Проверьте сервер ещё раз."),
 }
@@ -21,6 +26,7 @@ object SiteNginxInstaller {
     private const val CODE_NO_APT = 69
     private const val CODE_INSTALL = 70
     private const val CODE_START = 71
+    private const val CODE_EOL_OS = 72
 
     internal val COMMAND: String = """
         set -u
@@ -31,7 +37,18 @@ object SiteNginxInstaller {
             apt-get install -y -q --no-install-recommends -o DPkg::Lock::Timeout=300 nginx >/dev/null 2>&1 ||
                 { apt-get update -q -o DPkg::Lock::Timeout=300 >/dev/null 2>&1 &&
                   apt-get install -y -q --no-install-recommends -o DPkg::Lock::Timeout=300 nginx >/dev/null 2>&1; } ||
-                exit $CODE_INSTALL
+                {
+                    # Read-only diagnosis: releases whose package pools moved to the archive (Debian <= 11,
+                    # Ubuntu <= 18.04) fail with 404s that look like a network problem. Never edit sources.
+                    os_id="${'$'}(. /etc/os-release >/dev/null 2>&1; echo "${'$'}{ID:-}")"
+                    os_ver="${'$'}(. /etc/os-release >/dev/null 2>&1; echo "${'$'}{VERSION_ID:-}")"
+                    os_major="${'$'}{os_ver%%.*}"
+                    case "${'$'}os_id" in
+                        debian) [ -n "${'$'}os_major" ] && [ "${'$'}os_major" -le 11 ] 2>/dev/null && exit $CODE_EOL_OS ;;
+                        ubuntu) [ -n "${'$'}os_major" ] && [ "${'$'}os_major" -le 18 ] 2>/dev/null && exit $CODE_EOL_OS ;;
+                    esac
+                    exit $CODE_INSTALL
+                }
             # The distro package ships a placeholder "Welcome to nginx" site on port 80 (default_server).
             # It would make the site builder see port 80 as occupied. Disable it only in this pristine
             # state: the stock symlink is the sole enabled site and conf.d has no configs.
@@ -69,13 +86,16 @@ object SiteNginxInstaller {
                     else -> SiteNginxInstallOutcome.UNKNOWN
                 }
             }
-            is CommandCompletion.ConfirmedFailure -> when (completion.exitCode) {
-                CODE_NO_APT -> SiteNginxInstallOutcome.NO_APT
-                CODE_INSTALL -> SiteNginxInstallOutcome.INSTALL_FAILED
-                CODE_START -> SiteNginxInstallOutcome.START_FAILED
-                else -> SiteNginxInstallOutcome.UNKNOWN
-            }
+            is CommandCompletion.ConfirmedFailure -> outcomeForExitCode(completion.exitCode)
             else -> SiteNginxInstallOutcome.UNKNOWN
         }
+    }
+
+    internal fun outcomeForExitCode(code: Int?): SiteNginxInstallOutcome = when (code) {
+        CODE_NO_APT -> SiteNginxInstallOutcome.NO_APT
+        CODE_INSTALL -> SiteNginxInstallOutcome.INSTALL_FAILED
+        CODE_START -> SiteNginxInstallOutcome.START_FAILED
+        CODE_EOL_OS -> SiteNginxInstallOutcome.UNSUPPORTED_OS
+        else -> SiteNginxInstallOutcome.UNKNOWN
     }
 }
