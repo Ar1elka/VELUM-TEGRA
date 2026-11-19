@@ -40,6 +40,10 @@ class JschSshHostKeyProbe : SshHostKeyProbe {
             probeSession.setSocketFactory(BoundedSocketFactory(4_000))
             probeSession.setConfig("StrictHostKeyChecking", "yes")
             probeSession.setConfig("PreferredAuthentications", "none")
+            // Observe the same host-key type the real login will negotiate. Without this JSch's default
+            // prefers ssh-ed25519, the user pins that fingerprint, and the policy-restricted login (which
+            // presents ECDSA/RSA) then fails with a host identity mismatch.
+            probeSession.setConfig("server_host_key", VelumSshAlgorithmPolicy.serverHostKey.joinToString(","))
             // check() always rejects; connect must never authenticate, open a channel, or succeed.
             runInterruptible(Dispatchers.IO) { probeSession.connect(8_000) }
             SshHostKeyObservation.Failed(SshHostKeyObservation.Failure.NO_HOST_KEY)

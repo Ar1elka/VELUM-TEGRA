@@ -24,11 +24,20 @@ class UnsupportedPrivateKeyDetectorTest {
         return "-----BEGIN OPENSSH PRIVATE KEY-----\n$b64\n-----END OPENSSH PRIVATE KEY-----\n".toByteArray()
     }
 
-    @Test fun `ed25519 openssh key gets a clear message, also when passphrase protected`() {
-        val plain = EnrollmentInputPolicy.validatePrivateKeyDocument(opensshKey("ssh-ed25519"))
+    private fun explain(doc: ByteArray, ed25519: Boolean) = UnsupportedPrivateKeyDetector.explain(doc, ed25519)
+
+    @Test fun `ed25519 is accepted when the device supports it and explained when it does not`() {
+        assertNull(explain(opensshKey("ssh-ed25519"), ed25519 = true))
+        assertNull(explain(opensshKey("ssh-ed25519", cipher = "aes256-ctr"), ed25519 = true))
+        val plain = explain(opensshKey("ssh-ed25519"), ed25519 = false)
         assertNotNull(plain)
         assertTrue(plain!!.contains("Ed25519") && plain.contains("ecdsa"))
-        assertNotNull(EnrollmentInputPolicy.validatePrivateKeyDocument(opensshKey("ssh-ed25519", cipher = "aes256-ctr")))
+        assertNotNull(explain(opensshKey("ssh-ed25519", cipher = "aes256-ctr"), ed25519 = false))
+    }
+
+    @Test fun `this build supports ed25519 user keys`() {
+        assertTrue(com.velumtegra.xuimobile.core.ssh.SshKeyCapabilities.ed25519UserKeys)
+        assertNull(EnrollmentInputPolicy.validatePrivateKeyDocument(opensshKey("ssh-ed25519")))
     }
 
     @Test fun `ecdsa and rsa openssh keys are accepted`() {
@@ -39,6 +48,8 @@ class UnsupportedPrivateKeyDetectorTest {
     @Test fun `dsa and hardware token keys are explained`() {
         assertTrue(EnrollmentInputPolicy.validatePrivateKeyDocument(opensshKey("ssh-dss"))!!.contains("DSA"))
         assertTrue(EnrollmentInputPolicy.validatePrivateKeyDocument(opensshKey("sk-ssh-ed25519@openssh.com"))!!.contains("sk-"))
+        // Hardware-token Ed25519 stays unsupported even where plain Ed25519 works.
+        assertNotNull(explain(opensshKey("sk-ssh-ed25519@openssh.com"), ed25519 = true))
         val pemDsa = "-----BEGIN DSA PRIVATE KEY-----\nAAAA\n-----END DSA PRIVATE KEY-----\n".toByteArray()
         assertNotNull(EnrollmentInputPolicy.validatePrivateKeyDocument(pemDsa))
     }
@@ -50,8 +61,9 @@ class UnsupportedPrivateKeyDetectorTest {
             val b64 = Base64.getEncoder().encodeToString(der)
             return "-----BEGIN PRIVATE KEY-----\n$b64\n-----END PRIVATE KEY-----\n".toByteArray()
         }
-        assertNotNull(EnrollmentInputPolicy.validatePrivateKeyDocument(pkcs8(0x2B, 0x65, 0x70)))
-        assertNull(EnrollmentInputPolicy.validatePrivateKeyDocument(pkcs8(0x2A, 0x86, 0x48)))
+        assertNotNull(explain(pkcs8(0x2B, 0x65, 0x70), ed25519 = false))
+        assertNull(explain(pkcs8(0x2B, 0x65, 0x70), ed25519 = true))
+        assertNull(explain(pkcs8(0x2A, 0x86, 0x48), ed25519 = false))
     }
 
     @Test fun `unparseable containers fall through to the normal flow`() {

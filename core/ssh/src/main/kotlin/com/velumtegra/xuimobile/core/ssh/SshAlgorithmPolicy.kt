@@ -4,8 +4,10 @@ package com.velumtegra.xuimobile.core.ssh
  * Explicit VELUM//TEGRA allow-list for mwiede/JSch.
  *
  * Deliberately excludes every diffie-hellman-group-exchange-* variant while upstream issue #1089
- * remains open. Also excludes SHA-1 signatures/MACs, CBC/3DES, DSA, ssh-rsa/SHA-1 and algorithms
- * that currently need extra Android crypto-provider assumptions (for example Ed25519/Curve25519).
+ * remains open. Also excludes SHA-1 signatures/MACs, CBC/3DES, DSA, ssh-rsa/SHA-1 and Curve25519 key
+ * exchange. Ed25519 is allowed only as a USER public-key type: signing runs on BouncyCastle's
+ * lightweight RFC 8032 implementation through JSch's `bc.*` classes, so it needs no Android JCA
+ * provider. Host keys and key exchange stay on ECDSA/RSA/DH.
  */
 object VelumSshAlgorithmPolicy {
     val keyExchange: List<String> = listOf(
@@ -26,6 +28,7 @@ object VelumSshAlgorithmPolicy {
 
     /** Allowed user public-key signature algorithms. SHA-1 ssh-rsa and DSA are intentionally absent. */
     val userPublicKey: List<String> = listOf(
+        "ssh-ed25519",
         "ecdsa-sha2-nistp256",
         "ecdsa-sha2-nistp384",
         "ecdsa-sha2-nistp521",

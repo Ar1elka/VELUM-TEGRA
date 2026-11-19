@@ -36,6 +36,7 @@
 | AndroidX Room 3, AndroidX SQLite | Google / AOSP | Apache-2.0 |
 | Android Gradle Plugin, KSP, desugar_jdk_libs | Google | Apache-2.0 (desugar: GPL-2.0 with Classpath Exception) |
 | JSch 2.28.7 (форк mwiede/jsch) — SSH-клиент приложения | github.com/mwiede/jsch | BSD-стиль (см. репозиторий) |
+| Bouncy Castle (bcprov-jdk18on 1.80.2) — подпись Ed25519 для ключей пользователя через классы `bc.*` в JSch | bouncycastle.org | Bouncy Castle License (MIT-стиль) |
 | OkHttp 5 — HTTP для веб-панели | Square | Apache-2.0 |
 | MaxMind GeoIP2 Java API — чтение базы стран в сканере | MaxMind | Apache-2.0 |
 | Apache MINA SSHD — только тестовый SSH-сервер, в APK не входит | Apache Software Foundation | Apache-2.0 |

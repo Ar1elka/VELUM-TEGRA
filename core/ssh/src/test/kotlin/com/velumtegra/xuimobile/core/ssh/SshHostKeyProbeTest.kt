@@ -43,4 +43,25 @@ class SshHostKeyProbeTest {
             assertEquals(0, attempts.get())
         } finally { fixture.stop() }
     }
+
+    /** Regression: the observed key must be of a type the policy-restricted login can negotiate. */
+    @Test fun probeObservesOnlyHostKeyTypesTheLoginPolicyAllows() = runBlocking {
+        val ed25519 = KeyPairGenerator.getInstance("Ed25519").generateKeyPair()
+        val rsa = KeyPairGenerator.getInstance("RSA").apply { initialize(2048) }.generateKeyPair()
+        val fixture = SshServer.setUpDefaultServer().apply {
+            host = "127.0.0.1"
+            port = 0
+            // Ed25519 first: an unrestricted client would prefer and pin it.
+            keyPairProvider = KeyPairProvider.wrap(ed25519, rsa)
+            userAuthFactories = listOf(UserAuthPasswordFactory.INSTANCE)
+            passwordAuthenticator = org.apache.sshd.server.auth.password.PasswordAuthenticator { _, _, _ -> false }
+        }
+        try {
+            fixture.start()
+            val observation = JschSshHostKeyProbe().observe("127.0.0.1", fixture.port)
+            assertTrue("expected SSH public host key, got $observation", observation is SshHostKeyObservation.Presented)
+            val presented = observation as SshHostKeyObservation.Presented
+            assertEquals("ssh-rsa", presented.algorithm)
+        } finally { fixture.stop() }
+    }
 }

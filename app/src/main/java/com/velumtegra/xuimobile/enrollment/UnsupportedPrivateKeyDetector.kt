@@ -1,9 +1,12 @@
 package com.velumtegra.xuimobile.enrollment
 
+import com.velumtegra.xuimobile.core.ssh.SshKeyCapabilities
+
 /**
- * Recognises private-key types that the pinned SSH client policy (`VelumSshAlgorithmPolicy`) can never
- * authenticate with, so the user gets a clear message at import time instead of a generic
- * "server rejected SSH authentication" later.
+ * Recognises private-key types that the pinned SSH client policy (`VelumSshAlgorithmPolicy`) or this
+ * device can never authenticate with (DSA, hardware tokens, and Ed25519 where the BouncyCastle classes
+ * it needs are unavailable at runtime, see [SshKeyCapabilities]), so the user gets a clear message at import time
+ * instead of a generic "server rejected SSH authentication" later.
  *
  * Only the public part of the key is inspected (the OpenSSH container keeps it unencrypted even for
  * passphrase-protected keys). The secret part is never decoded. Anything that cannot be classified is
@@ -12,8 +15,8 @@ package com.velumtegra.xuimobile.enrollment
  */
 internal object UnsupportedPrivateKeyDetector {
     private const val ED25519_ADVICE =
-        "Ключи Ed25519 пока не поддерживаются: приложение принимает ключи ECDSA и RSA. " +
-            "Создайте такой ключ командой ssh-keygen -t ecdsa -b 256, добавьте открытую часть на сервер " +
+        "Ключи Ed25519 не поддерживаются на этом устройстве (старая версия Android). Используйте ключ ECDSA или RSA: " +
+            "создайте его командой ssh-keygen -t ecdsa -b 256, добавьте открытую часть на сервер " +
             "и выберите новый файл."
     private const val DSA_ADVICE =
         "Ключи DSA считаются небезопасными и не поддерживаются. Используйте ключ ECDSA или RSA " +
@@ -25,20 +28,23 @@ internal object UnsupportedPrivateKeyDetector {
     private val OPENSSH_MAGIC = "openssh-key-v1\u0000".toByteArray(Charsets.US_ASCII)
 
     /** Returns a user-facing explanation when the key is of a known unsupported type, otherwise null. */
-    fun explain(document: ByteArray): String? {
+    fun explain(
+        document: ByteArray,
+        ed25519Supported: Boolean = SshKeyCapabilities.ed25519UserKeys,
+    ): String? {
         val text = document.toString(Charsets.ISO_8859_1)
         return when {
             text.startsWith("-----BEGIN OPENSSH PRIVATE KEY-----") ->
-                openSshKeyType(decodeBody(text, "OPENSSH PRIVATE KEY"))?.let(::adviceForType)
+                openSshKeyType(decodeBody(text, "OPENSSH PRIVATE KEY"))?.let { adviceForType(it, ed25519Supported) }
             text.startsWith("-----BEGIN DSA PRIVATE KEY-----") -> DSA_ADVICE
             text.startsWith("-----BEGIN PRIVATE KEY-----") ->
-                if (isPkcs8Ed25519(decodeBody(text, "PRIVATE KEY"))) ED25519_ADVICE else null
+                if (!ed25519Supported && isPkcs8Ed25519(decodeBody(text, "PRIVATE KEY"))) ED25519_ADVICE else null
             else -> null
         }
     }
 
-    private fun adviceForType(type: String): String? = when {
-        type == "ssh-ed25519" -> ED25519_ADVICE
+    private fun adviceForType(type: String, ed25519Supported: Boolean): String? = when {
+        type == "ssh-ed25519" -> if (ed25519Supported) null else ED25519_ADVICE
         type == "ssh-dss" -> DSA_ADVICE
         type.startsWith("sk-") -> HARDWARE_ADVICE
         else -> null

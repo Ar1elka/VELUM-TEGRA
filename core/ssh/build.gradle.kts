@@ -19,6 +19,8 @@ dependencies {
     implementation(project(":core:site"))
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.mwiede.jsch)
+    // Used only through JSch's bc.* Ed25519 classes (lightweight API, no JCA provider registration).
+    implementation(libs.bouncycastle.bcprov)
 
     testImplementation(libs.junit)
     // Test-only deterministic loopback SSH server. Never packaged into production APK.
