@@ -112,7 +112,8 @@ class RestoreCheckVerifiedResultInstrumentedTest {
         // Opening the confirmation dialog for the source check sends nothing; dismissing keeps it that way.
         compose.onNodeWithTag("restore_check_source").performScrollTo().performClick()
         compose.awaitTag("restore_check_confirm")
-        compose.onNodeWithTag("restore_check_review_scope").assertTextContains("Разрешить чтение выбранной", substring = true)
+        compose.onNodeWithTag("restore_check_review_scope")
+            .assertTextContains("только прочитает копию", substring = true)
         compose.runOnIdle { assertEquals(emptyList<String>(), actionCalls) }
         compose.onNodeWithTag("restore_check_dismiss").performClick()
         compose.waitUntil(10_000) { compose.count("restore_check_confirm") == 0 }

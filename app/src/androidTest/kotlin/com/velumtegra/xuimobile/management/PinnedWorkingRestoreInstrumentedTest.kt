@@ -129,7 +129,7 @@ class PinnedWorkingRestoreInstrumentedTest {
             compose.onNodeWithTag("pending_working_restore_wdb-good").performClick()
             compose.runOnIdle { assertEquals(round + 1, opened.size); assertEquals("wdb-good" to "comparison", opened.last()) }
             compose.awaitTag("working_db_status")
-            compose.onNodeWithTag("working_db_pinned").assertTextContains("уже зарегистрированная запись", substring = true)
+            compose.onNodeWithTag("working_db_pinned").assertTextContains("уже начатое восстановление", substring = true)
             compose.onNodeWithTag("working_db_status").assertTextContains("отправка изменения не подтверждена", substring = true)
             assertEquals(0, compose.count("working_db_restore")) // no way to start a new restore from a pinned record
             compose.onNodeWithTag("working_db_cancel").assertExists() // available, but only shown, never run on entry

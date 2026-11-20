@@ -5,7 +5,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertTextContains
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithTag
@@ -79,7 +81,9 @@ class BackupArchiveHistoryInstrumentedTest {
         compose.onNodeWithTag("backup_archive_own-b-002").assertExists()
         // The other SSH profile's row is rejected by the production policy.
         assertEquals(0, compose.count("backup_archive_foreign-001"))
-        compose.onNodeWithTag("backup_archive_own-a-001").assertTextContains("own-a-00", substring = true)
+        compose.onNodeWithTag("backup_archive_own-a-001")
+            .assertTextContains("Копия от ", substring = true)
+            .assert(!hasText("own-a-00", substring = true))
         compose.runOnIdle { assertEquals(emptyList<String>(), selected) } // listing alone selects nothing
 
         compose.onNodeWithTag("backup_archive_own-b-002").performClick()

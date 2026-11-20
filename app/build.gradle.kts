@@ -35,8 +35,8 @@ android {
         applicationId = "com.velumtegra.xuimobile"
         minSdk = 24
         targetSdk = 37
-        versionCode = 3
-        versionName = "2.0.0-rc01"
+        versionCode = 4
+        versionName = "2.0.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
